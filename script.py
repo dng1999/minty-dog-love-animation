@@ -21,9 +21,27 @@ from draw import *
   jdyrlandweaver
   ==================== """
 def first_pass( commands ):
-    pass
-
-
+    frames = False
+    basename = False
+    vary = False
+    for command in commands:
+        if command.index('frames') != -1:
+            frames = True
+        elif command.index('basename') != -1:
+            basename = True
+        elif command.index('vary') != -1:
+            vary = True
+    #        
+    if vary && !frames:
+        print "Error: Frames not specified."
+        return
+    #
+    elif frames && !basename:
+        print "Warning: Basename not specified."
+        print "Basename has been set to default value: simple"
+    #
+    num_frames = 
+        
 """======== second_pass( commands ) ==========
 
   In order to set the knobs for animation, we need to keep
@@ -61,6 +79,9 @@ def run(filename):
         print "Parsing failed."
         return
 
+    first_pass(commands)
+    #second_pass(commands)
+        
     ident(tmp)
     stack = [ [x[:] for x in tmp] ]
     screen = new_screen()
