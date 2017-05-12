@@ -21,26 +21,30 @@ from draw import *
   jdyrlandweaver
   ==================== """
 def first_pass( commands ):
-    frames = False
-    basename = False
-    vary = False
+    frames = -1
+    bname = -1
+    vary = -1
+    index = 0
     for command in commands:
-        if command.index('frames') != -1:
-            frames = True
-        elif command.index('basename') != -1:
-            basename = True
-        elif command.index('vary') != -1:
-            vary = True
+        if command[0] == 'frames':
+            frames = index
+        elif command[0] == 'basename':
+            bname = index
+        elif command[0] == 'vary':
+            vary = index
+        index += 1
     #        
-    if vary && !frames:
+    if vary > -1 and frames == -1:
         print "Error: Frames not specified."
         return
     #
-    elif frames && !basename:
+    elif frames > -1 and bname == -1:
         print "Warning: Basename not specified."
         print "Basename has been set to default value: simple"
     #
-    num_frames = 
+    num_frames = commands[frames][1]
+    basename = commands[bname][1]
+    return [num_frames, basename]
         
 """======== second_pass( commands ) ==========
 
@@ -60,8 +64,17 @@ def first_pass( commands ):
   appropirate value. 
   ===================="""
 def second_pass( commands, num_frames ):
-    pass
-
+    knob = []
+    keys = []
+    index = 0
+    print "======= second_pass"
+    for command in commands:
+        if command[0] == 'vary':
+            if commands[index][1] not in keys:
+                keys.append(commands[index][1])
+        index += 1
+    print keys
+    
 
 def run(filename):
     """
@@ -79,8 +92,10 @@ def run(filename):
         print "Parsing failed."
         return
 
-    first_pass(commands)
-    #second_pass(commands)
+    framebase = first_pass(commands)
+    frames = int(framebase[0])
+    basename = framebase[1]
+    second_pass(commands, frames)
         
     ident(tmp)
     stack = [ [x[:] for x in tmp] ]
@@ -88,7 +103,7 @@ def run(filename):
     tmp = []
     step = 0.1
     for command in commands:
-        print command
+        #print command
         c = command[0]
         args = command[1:]
 
