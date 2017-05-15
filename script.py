@@ -4,6 +4,7 @@ from matrix import *
 from draw import *
 
 global num_frames
+num_frames = 1
 global basename
 basename = 'simple'
 
