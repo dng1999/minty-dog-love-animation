@@ -3,6 +3,10 @@ from display import *
 from matrix import *
 from draw import *
 
+global num_frames
+global basename
+basename = 'simple'
+
 """======== first_pass( commands, symbols ) ==========
 
   Checks the commands array for any animation commands
@@ -21,6 +25,9 @@ from draw import *
   jdyrlandweaver
   ==================== """
 def first_pass( commands ):
+    global num_frames
+    global basename
+
     frames = -1
     bname = -1
     vary = -1
@@ -42,9 +49,8 @@ def first_pass( commands ):
         print "Warning: Basename not specified."
         print "Basename has been set to default value: simple"
     #
-    num_frames = commands[frames][1]
+    num_frames = int(commands[frames][1])
     basename = commands[bname][1]
-    return [num_frames, basename]
         
 """======== second_pass( commands ) ==========
 
@@ -64,17 +70,24 @@ def first_pass( commands ):
   appropirate value. 
   ===================="""
 def second_pass( commands, num_frames ):
-    knob = []
-    keys = []
-    index = 0
-    print "======= second_pass"
+    #print "======= second_pass"
+    knobs = []
+    for i in range(num_frames):
+        knobs.append({})
     for command in commands:
         if command[0] == 'vary':
-            if commands[index][1] not in keys:
-                keys.append(commands[index][1])
-        index += 1
-    print keys
-    
+            vary = command[1]
+            start_frame = command[2]
+            end_frame = command[3]
+            start_val = float(command[4])
+            end_val = float(command[5])
+            increment = (end_val-start_val)/(end_frame-start_frame)
+            curr_val = float(command[4])
+            #print "vary",vary,start_frame,end_frame,start_val,end_val,increment
+            for i in range(num_frames):
+                if i >= start_frame and i<= end_frame:
+                    knobs[i][vary] = curr_val
+                    curr_val += increment
 
 def run(filename):
     """
@@ -91,12 +104,11 @@ def run(filename):
     else:
         print "Parsing failed."
         return
-
-    framebase = first_pass(commands)
-    frames = int(framebase[0])
-    basename = framebase[1]
-    second_pass(commands, frames)
-        
+    #print symbols
+    
+    first_pass(commands)
+    second_pass(commands, num_frames)
+    
     ident(tmp)
     stack = [ [x[:] for x in tmp] ]
     screen = new_screen()
@@ -107,7 +119,13 @@ def run(filename):
         c = command[0]
         args = command[1:]
 
-        if c == 'box':
+        if c == 'set':
+            symbols[args[0]][0] = args[1]
+        elif c == 'setknobs':
+            keys = symbols.keys()
+            for i in range(len(keys)):
+                symbols[keys[i]][1] = args[1]
+        elif c == 'box':
             add_box(tmp,
                     args[0], args[1], args[2],
                     args[3], args[4], args[5])
