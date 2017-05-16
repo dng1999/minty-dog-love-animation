@@ -152,25 +152,28 @@ def run(filename):
                 tmp = []
             elif c == 'move':
                 if args[3] != None:
-                    args[0] *= knobs[i][args[3]]
-                    args[1] *= knobs[i][args[3]]
-                    args[2] *= knobs[i][args[3]]
+                    a0 = args[0] * knobs[i][args[3]]
+                    a1 = args[1] * knobs[i][args[3]]
+                    a2 = args[2] * knobs[i][args[3]]
+                    args = [a0,a1,a2,args[3]]
                 tmp = make_translate(args[0], args[1], args[2])
                 matrix_mult(stack[-1], tmp)
                 stack[-1] = [x[:] for x in tmp]
                 tmp = []
             elif c == 'scale':
                 if args[3] != None:
-                    args[0] *= knobs[i][args[3]]
-                    args[1] *= knobs[i][args[3]]
-                    args[2] *= knobs[i][args[3]]
+                    a0 = args[0] * knobs[i][args[3]]
+                    a1 = args[1] * knobs[i][args[3]]
+                    a2 = args[2] * knobs[i][args[3]]
+                    args = [a0,a1,a2,args[3]]
                 tmp = make_scale(args[0], args[1], args[2])
                 matrix_mult(stack[-1], tmp)
                 stack[-1] = [x[:] for x in tmp]
                 tmp = []
             elif c == 'rotate':
                 if args[2] != None:
-                    args[1] *= knobs[i][args[2]]
+                    a1 = args[1] * knobs[i][args[2]]
+                    args = [args[0],a1,args[2]]
                 theta = args[1] * (math.pi/180)
                 if args[0] == 'x':
                     tmp = make_rotX(theta)
@@ -192,7 +195,7 @@ def run(filename):
         #save frame
         fname = 'anim/' + basename + "%03d"%i + '.ppm'
         
-        #save_ppm(screen, fname)
-        #clear_screen(screen)
+        save_ppm(screen, fname)
+        clear_screen(screen)
 
-    #make_animation(basename)
+    make_animation(basename)
