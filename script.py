@@ -108,12 +108,13 @@ def run(filename):
     else:
         print "Parsing failed."
         return
-    print symbols
+    #print symbols
 
     first_pass(commands)
     second_pass(commands, num_frames)
 
     for i in range(num_frames):
+        print i
         tmp = new_matrix()
         ident(tmp)
         stack = [ [x[:] for x in tmp] ]
@@ -181,9 +182,9 @@ def run(filename):
                     tmp = make_rotY(theta)
                 else:
                     tmp = make_rotZ(theta)
-                    matrix_mult( stack[-1], tmp )
-                    stack[-1] = [ x[:] for x in tmp]
-                    tmp = []
+                matrix_mult( stack[-1], tmp )
+                stack[-1] = [ x[:] for x in tmp]
+                tmp = []
             elif c == 'push':
                 stack.append([x[:] for x in stack[-1]] )
             elif c == 'pop':
@@ -194,7 +195,7 @@ def run(filename):
                 save_extension(screen, args[0])
         #save frame
         fname = 'anim/' + basename + "%03d"%i + '.ppm'
-        
+
         save_ppm(screen, fname)
         clear_screen(screen)
 
