@@ -114,7 +114,7 @@ def run(filename):
     second_pass(commands, num_frames)
 
     for i in range(num_frames):
-        print i
+        #print i
         tmp = new_matrix()
         ident(tmp)
         stack = [ [x[:] for x in tmp] ]
